@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://vuejs.org/js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="app">
+		<h1>todo</h1>
+		<input v-model="addString" type="text" @keypress.enter="push">
+		<button @click="push">add</button>
+   		<h2>not yet</h2>
+   		<hr>
+   		<ul>
+			<li
+				v-for="item in notYetList"
+				is="test-component"					
+				:key="item.sn"
+				:node="item"
+			></li>
+   		</ul>
+		<h2>done</h2>
+		<hr>
+		<ul>
+			<li
+				v-for="item in doneList"
+				is="test-component"					
+				:key="item.sn"
+				:node="item"
+			></li>
+		</ul>
+    </div>
+
+    <script>
+		Vue.component('test-component', {
+			template: `
+				<li>
+					<input type="checkbox" v-model="node.done">
+					<i>{{ node.name }}</i>
+				</li>
+			`,
+			props: {
+				node: {
+					type: Object,
+					required: true,
+				}
+			}
+		});
+		
+        let $vue = new Vue({
+                el: '#app',
+                data: {
+					addString: '',
+                    todo: [
+						{
+							sn: 1,
+							done: false,
+							name: 'buy a milk!',
+						},
+						{
+							sn: 2,
+							done: false,
+							name: 'buy a drink!',
+						},
+						{
+							sn: 3,
+							done: false,
+							name: 'buy a food!',
+						},
+						{
+							sn: 4,
+							done: true,
+							name: 'buy a egg!',
+						},
+						{
+							sn: 0,
+							done: true,
+							name: 'buy a baby!',
+						},
+					],
+                },
+                computed: {
+					doneList: function(){
+						
+						return this.todo.filter(function(item){
+							return item.done;
+						});
+					},
+					notYetList: function(){
+						
+						return this.todo.filter(function(item){
+							return !item.done;
+						});
+					},
+                },
+                methods: {
+                    push: function(){
+						
+						if( this.addString ) {
+							
+							this.todo.push({
+								sn: new Date().getTime(),
+								done: false,
+								name: this.addString,
+							});
+							
+							this.addString = '';
+					    }
+                    },
+                    remove: function(index){
+                        this.man.splice(index, 1)
+                    }
+                }
+            });
+    </script>
+</body>
+</html>
